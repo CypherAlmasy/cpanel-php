@@ -331,28 +331,24 @@ class Cpanel implements CpanelInterface
      *
      * @return array results of API call
      *
+     * @throws \GuzzleHttp\Exception\ClientException
+     *
      * @since v1.0.0
      */
     protected function runQuery($action, $arguments)
     {
         $host = $this->getHost();
         $client = new Client(['base_uri' => $host]);
-        try{
-          $response = $client->post('/json-api/' . $action, [
-              'headers' => $this->createHeader(),
-              // 'body'    => $arguments[0],
-              'verify' => false,
-              'query' => $arguments,
-              'timeout' => $this->getTimeout(),
-              'connect_timeout' => $this->getConnectionTimeout()
-          ]);
+        $response = $client->post('/json-api/' . $action, [
+            'headers' => $this->createHeader(),
+            // 'body'    => $arguments[0],
+            'verify' => false,
+            'query' => $arguments,
+            'timeout' => $this->getTimeout(),
+            'connect_timeout' => $this->getConnectionTimeout()
+        ]);
 
-          return (string) $response->getBody();
-        }
-        catch(\GuzzleHttp\Exception\ClientException $e)
-        {
-          return $e->getMessage();
-        }
+        return (string) $response->getBody();
     }
 
     /**
